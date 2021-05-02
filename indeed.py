@@ -2,6 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 LIMIT=50
+LAST_PAGE = 10
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}&"
 
 def extract_indeed_pages():  
@@ -15,7 +16,7 @@ def extract_indeed_pages():
 
   for link in links[:-1]:
       pages.append(int(link.find("span").string))
-  last_page = pages[-1]
+  last_page = pages[-1]-5+LAST_PAGE
 
   return last_page
   
