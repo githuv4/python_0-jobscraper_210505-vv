@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 
 LIMIT=50
-LAST_PAGE = 3
+LAST_PAGE = 1
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}"
 
 def extract_indeed_pages():  
@@ -27,7 +27,11 @@ def extract_indded_jobs(last_page):
   jobs=[]
   for page in range(last_page):
     result = requests.get(f"{URL}&start={page*LIMIT}")
-    # print(result.status.code)
-    print(result.status_code)
+    soup = BeautifulSoup(result.text, "html.parser")
+    results = soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
+    for result in results:
+      title = result.find("h2",{"class":"title"}).find("a")["title"]
+      # title = result.find("h2",{"class":"title"}).find("a").string
+      print(title)      
   return jobs
   
