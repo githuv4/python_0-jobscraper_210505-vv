@@ -1,8 +1,8 @@
 import requests
 from bs4 import BeautifulSoup
 
-LIMIT=3
-LAST_PAGE = 1
+LIMIT=10
+LAST_PAGE = 2
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}"
 
 def extract_indeed_pages():  
@@ -19,10 +19,20 @@ def extract_indeed_pages():
   last_page = pages[-1]-5+LAST_PAGE
 
   return last_page
-  
-  # range(s,n)   : 숫자n부터 시작하는 n개 수모임
-  # range(0,5)   : 0부터시작하는 5개
-  # 0 1 2 3 4
+
+
+def extract_job (html):
+  title = html.find("h2",{"class":"title"}).find("a")["title"]
+  company = html.find("span",{"class":"company"})
+  company = str(company.string).strip()
+  location = html.find("span",{"class":"location"})
+  location = location.string
+  return {'title':title, 'company':company, 'location':location}
+
+
+# range(s,n)   : 숫자n부터 시작하는 n개 수모임
+# range(0,5)   : 0부터시작하는 5개
+# 0 1 2 3 4
 def extract_indded_jobs(last_page):
   jobs=[]
   for page in range(last_page):
@@ -30,11 +40,7 @@ def extract_indded_jobs(last_page):
     soup = BeautifulSoup(result.text, "html.parser")
     results = soup.find_all("div",{"class":"jobsearch-SerpJobCard"})
     for result in results:
-      title = result.find("h2",{"class":"title"}).find("a")["title"]
-      company = result.find("span",{"class":"company"})
-      company = company.string
-
-      print(title, company)
-
-  return jobs
+      job = extract_job(result)
+      jobs.append(job)
+  return jobs 
   
