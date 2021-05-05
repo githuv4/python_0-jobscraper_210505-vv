@@ -1,8 +1,11 @@
 import requests
+import os
 from bs4 import BeautifulSoup
 
-LIMIT = 10
-LAST_PAGE = 2
+os.system("clear")
+
+LIMIT = 50
+LAST_PAGE = 20
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}"
 
 
@@ -25,8 +28,14 @@ def extract_indeed_pages():
 def extract_job(html):
     title_a = html.find("h2", {"class": "title"}).find("a")
     title = title_a["title"]
-    company = html.find("span", {"class": "company"})
-    company = str(company.string).strip()
+    company_span = html.find("span", {"class": "company"})
+    if company_span == None:
+      company=" "
+    else:
+      company = company_span.string
+    
+    # print(title,":",company)
+
     location = html.find("span", {"class": "location"})
     location = location.string
     job_href = title_a["href"]
