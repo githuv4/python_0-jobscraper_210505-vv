@@ -4,8 +4,8 @@ from bs4 import BeautifulSoup
 
 os.system("clear")
 
-LIMIT = 50
-LAST_PAGE = 20
+LIMIT = 20
+LAST_PAGE = 5
 URL = f"https://kr.indeed.com/%EC%B7%A8%EC%97%85?q=python&limit={LIMIT}"
 
 
@@ -59,10 +59,11 @@ def extract_job(html):
 def extract_indded_jobs(last_page):
     jobs = []
     for page in range(last_page):
-        result = requests.get(f"{URL}&start={page*LIMIT}")
-        soup = BeautifulSoup(result.text, "html.parser")
-        results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
-        for result in results:
-            job = extract_job(result)
-            jobs.append(job)
+      print(f"Scraping page{page}")
+      result = requests.get(f"{URL}&start={page*LIMIT}")
+      soup = BeautifulSoup(result.text, "html.parser")
+      results = soup.find_all("div", {"class": "jobsearch-SerpJobCard"})
+      for result in results:
+          job = extract_job(result)
+          jobs.append(job)
     return jobs
